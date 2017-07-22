@@ -1,3 +1,5 @@
+<!-- Signs in users -->
+
 <?php
  //Starts session
  session_start();
@@ -15,9 +17,12 @@
  $username= (strval($_POST["username"]));
  $password= (strval($_POST["password"]));
  
+ //Gets length of username and password
  $uselen=(strlen($username));
  $passlen=(strlen($password));
  
+ /*If length of username or password is 0, it redirects you
+ to signin.php and sets an error stating to fill all fields */
  if (($uselen==0) or ($passlen==0)){
  	$_SESSION["error"]="Please fill in all fields";
  	header("Location:signin.php");
@@ -35,7 +40,7 @@
    username and password entered by the user to the usernames
    and passwords in the columns. If it finds a match, it
    directs the user to home.php. If not, or if there's 0 
-   rows, it direxts the user back to the sign-in page. */
+   rows, it directs the user back to the signin.php. */
  if (mysqli_num_rows($result)> 0) {
  	while ($row=mysqli_fetch_assoc($result)){
  		if (($row["Username"]==$username) and 
@@ -50,6 +55,8 @@
  			exit();
  			}
  		else{
+ 			/*Sets session error stating there is an incorrect 
+ 			username or password */
  			$_SESSION["error"]="Incorrect username or password";
  			header("Location: signin.php");
  			}

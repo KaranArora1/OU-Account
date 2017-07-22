@@ -1,40 +1,49 @@
+<!-- Creates accounts -->
+
 <?php
  //Starts session
  session_start();
  
-  //Variables inserted into connection
+ //Variables inserted into connection
  $host='localhost';
  $db_uname='root';
  $db_pword='redrose10';
  $dbname='myDB';
  
- //Connection variable and function
+ //Connection variable 
  $conn = mysqli_connect($host, $db_uname, $db_pword, $dbname);
  
- /*Casts each input received by POST into a string and then assigns
-   it a variable */
+ /*Casts each input received by POST method
+ into a string and then assigns it a variable */
  $username= (strval($_POST["username"]));
  $password= (strval($_POST["password"]));
  $confirm= (strval($_POST["confirm"]));  
  
- /*Gets length of password and directs you back to "Create an 
- Account" if it's less than 4 characters */
+ //Gets length of username, password, and re-entered password 
  $passlen=strlen($password);
  $uselen=strlen($username);
  $conlen=strlen($confirm);
  
+ /*Directs you back to index.php if any of the lengths are zero
+ with an error message stating to fill in all fields */
  if (($uselen==0) or ($passlen==0) or ($conlen==0)){
  	$_SESSION["error"]="Please fill in all fields";
  	header("Location: index.php");
  	exit();
  	}
  
+ /*Directs you back to index.php if password length is less 
+ than 4 characters and gives an error stating the password
+ must be longer */
  elseif ($passlen< 4){
  	$_SESSION["error"]="Password must be at least 4 characters";
  	header("Location: index.php");
  	exit();
  	}
  
+ /*Directs you back to index.php if the password and the 
+ re-entered password do not match, stating an error that
+ says to make sure they match */
  elseif ($password != $confirm){
  	$_SESSION["error"]="The password you re-entered did not match";
  	header("Location: index.php");
@@ -45,13 +54,14 @@
  $sql= "SELECT Username FROM Account";
  $result= mysqli_query($conn, $sql);
  
- /* Checks if there are more than 0 rows. If this is true, it
- 	gets the username in each row and compares it to the one
- 	being entered. If they're the same, it takes you back to
- 	the "Create an Account" screen. */
+ /*Checks if there are more than 0 rows. If this is true, it
+ gets the username in each row and compares it to the one
+ being entered. If they're the same, it takes you back to
+ index.php because there can't be two of the same username. */
  if (mysqli_num_rows($result) > 0){
  	while ($row=mysqli_fetch_assoc($result)){
  		if ($row["Username"]== $username){
+ 			//Sets error stating username is already taken
  			$_SESSION["error"]="Username already in use";
  			header("Location: index.php");
  			exit();
@@ -60,8 +70,8 @@
  	}
  
  /*Inserts $username into Username column and $password into 
-   Password column of the table Account. Using variables in
-   this fashion might allow for SQL injection? */
+ Password column of the table Account. (Using variables in
+ this fashion might allow for SQL injection?) */
  $sql= "INSERT INTO Account (Username, Password) 
  VALUES ('$username', '$password')";
  
@@ -73,6 +83,6 @@
  //Closes mysql connection to database
  mysqli_close($conn);
  
- //Directs page to home.php
+ //Directs you to home.php
  header("Location: home.php");	
 ?>

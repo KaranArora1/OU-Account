@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<!-- Checks if user is already logged in. If this is true
-     it redirects him to success.php -->
+
+<!-- Sign-in page -->
+
 <?php
+ //Starts session
  session_start();
+ //If session username is set, it takes you to home.php
  if (isset($_SESSION["username"])){
  	header("Location: home.php");
  	}
@@ -37,6 +40,8 @@
  </form>
 </div>
 
+<!-- If there is a session error then it displays it at the 
+top of the screen -->
 <?php
 if (isset($_SESSION["error"])){
 	$error=$_SESSION["error"];
@@ -57,7 +62,9 @@ if (isset($_SESSION["error"])){
 	echo "$error</p>";
 		 	
 	echo "</div>";
-		 	
+	
+	/*Unsets and destroys session so error message goes
+	away on refresh */
 	session_unset();
 	session_destroy();
 	}

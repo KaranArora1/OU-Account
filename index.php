@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 
-<!-- Checks if user is already logged in. If this is true 
-     it redirects him to home.php -->
+<!-- Main page of website. Allows you to create an account -->
+
 <?php
+ //Starts session
  session_start();
+ //If the session username is set, it takes you to home.php
  if (isset($_SESSION["username"])){
  	header("Location: home.php");
  	}
@@ -43,6 +45,8 @@
 		<h2>Create an Account</h2>
 		</div>
 		
+		<!-- If a session error is set it displays it at the top of
+		the screen -->
 		<?php
 		 if (isset($_SESSION["error"])){
 		 	$error=$_SESSION["error"];
@@ -64,6 +68,8 @@
 		 	
 		 	echo "</div>";
 		 	
+		 	/*Unsets and destroys session so the error message 
+		 	goes away on refresh */
 		 	session_unset();
 			session_destroy();
 		 		  }
