@@ -12,7 +12,10 @@
   if (!isset($_SESSION["username"])){
   	header("Location: signin.php");
   	}
-?>
+  	
+  //Sets name variable
+  $name= $_SESSION["username"];
+  ?>
  
 <html>
 
@@ -28,12 +31,11 @@
  
  <!-- Displays your username in the header -->
  <?php
-  $name= $_SESSION["username"];
   echo("<h1>".$name."</h1>");
  ?>
  </div>
  <!-- Welcome message -->
- <div id= "welcome"> 
+ <div class= "welcome"> 
  <h1>Welcome</h1>
  </div>
  

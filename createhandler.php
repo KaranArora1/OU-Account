@@ -4,6 +4,13 @@
  //Starts session
  session_start();
  
+ 
+ //If session username is set, it takes you to homepage
+ if (isset($_SESSION["username"])){
+ 	header("Location: home.php");
+ 	exit();
+ 	}
+ 
  //Variables inserted into connection
  $host='localhost';
  $db_uname='root';
@@ -18,15 +25,17 @@
  $username= (strval($_POST["username"]));
  $password= (strval($_POST["password"]));
  $confirm= (strval($_POST["confirm"]));  
- 
- //Gets length of username, password, and re-entered password 
+ $email= (strval($_POST["email"]));
+  
+ //Gets length of username, password, re-entered password, and email
  $passlen=strlen($password);
  $uselen=strlen($username);
  $conlen=strlen($confirm);
+ $emaillen=strlen($email);
  
  /*Directs you back to index.php if any of the lengths are zero
  with an error message stating to fill in all fields */
- if (($uselen==0) or ($passlen==0) or ($conlen==0)){
+ if (($uselen==0) or ($passlen==0) or ($conlen==0) or ($emaillen==0)){
  	$_SESSION["error"]="Please fill in all fields";
  	header("Location: index.php");
  	exit();
@@ -49,40 +58,64 @@
  	header("Location: index.php");
  	exit();
  	}
- 	
- //Checks all of the elements in the Username column of Account
- $sql= "SELECT Username FROM Account";
+ 
+ /*Checks all of the elements in the Username and Email columns 
+ of Account */
+ $sql= "SELECT Username, Email FROM Account";
  $result= mysqli_query($conn, $sql);
  
  /*Checks if there are more than 0 rows. If this is true, it
- gets the username in each row and compares it to the one
- being entered. If they're the same, it takes you back to
- index.php because there can't be two of the same username. */
+ gets the username and email from each row and compares it 
+ to the ones being entered. If they're the same, it takes you 
+ back to index.php because there can't be two of the same 
+ username or email. */
  if (mysqli_num_rows($result) > 0){
  	while ($row=mysqli_fetch_assoc($result)){
  		if ($row["Username"]== $username){
  			//Sets error stating username is already taken
- 			$_SESSION["error"]="Username already in use";
+ 			$_SESSION["error"]="Username is already in use";
+ 			header("Location: index.php");
+ 			exit();
+ 			}
+ 			
+ 		elseif ($row["Email"]== $email){
+ 			//Sets error stating email is already taken
+ 			$_SESSION["error"]="Email is already in use";
  			header("Location: index.php");
  			exit();
  			}
  		}
  	}
  
+//URL
+$url= "http://localhost:8080/linkhandler.php?username=$username";
+ 
+ /*Sends an email to the address entered. If there is an error,
+   it sets a session error*/
+ if (!(mail("$email","Account Creation",
+ 			"Click the link to create your account! $url", 
+ 		
+ 			"From: karanarora2001@gmail.com"))){
+ 	  $_SESSION["error"]= "There was an error sending the email"; 
+ 	  header("Location: index.php");
+ 	  exit();
+ 	  }
+ 
+ //Sets session email
+ $_SESSION["email"]=strval($email);
+ 
  /*Inserts $username into Username column and $password into 
- Password column of the table Account. (Using variables in
- this fashion might allow for SQL injection?) */
- $sql= "INSERT INTO Account (Username, Password) 
- VALUES ('$username', '$password')";
+ Password column of the table Account. Also puts in email and
+ status (Using variables in this fashion might allow for SQL 
+ injection?) */
+ $sql= "INSERT INTO Account (Username, Password, Email, Status) 
+ VALUES ('$username', '$password', '$email', 'Inactive')";
  
  mysqli_query($conn, $sql);
- 
- //Sets session username
- $_SESSION["username"]=$username;
 
  //Closes mysql connection to database
  mysqli_close($conn);
  
- //Directs you to home.php
- header("Location: home.php");	
+ //Directs you to email.php
+ header("Location: email.php");	
 ?>

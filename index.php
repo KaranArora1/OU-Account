@@ -26,17 +26,27 @@
 		<!-- Div for form to create a new account -->
 		<div class= "create" id="create-index">
 		
-		<!-- Directs form to a php file that inserts input into  
-			 database using POST method -->
+		<!-- Directs form to a php file that sends email   
+			using POST method -->
 		<form action="/createhandler.php" method= "POST"> 
+		
 			Username:<br>
 			<input type="text" name="username"><br><br>
+			
 			Password:<br>
-			<input type="password" name="password"><br><br>
+			<input type="password" name="password"><br>
+			<p class="charlimit"><i>
+			Password must be at least 4 characters</i></p>
+			
 			Confirm Password: 
-			<input type="password" name="confirm"><br>
-			<p id="charlimit"><i>
-			Password must be at least 4 characters</i></p>	
+			<input type="password" name="confirm"><br><br>
+			
+			Email:
+			<br><input type="text" name="email"><br>
+			<p class="charlimit"><i>
+			A message will be sent to this email for 
+			authentication</i></p>
+			
 			<input type="submit" value="Create Account">
 		</form>
 		</div> 

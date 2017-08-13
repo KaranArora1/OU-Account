@@ -52,19 +52,14 @@ h2 {
     margin-left: auto;
 	margin-right: auto;
 	}
-
-/*Makes links in header turn gold when cursor is on top of them */
-a:hover{
-	color: gold;
-	}	
-
-/*Formats message that says password must be 4 long */
-#charlimit {
+	
+/*Formats messages beneath form inputs */
+.charlimit {
 	font-size: 75%;
 	}
 
-/*Formats welcome box in home.php */
-#welcome {
+/*Formats green box in home.php and email.php */
+.welcome {
 	width: 300px;
 	height: 125px;
 	background-color: rgba(125, 252, 70, 0.5);
@@ -72,15 +67,20 @@ a:hover{
 	margin-top: 250px;
 	border: 1px solid #26d336;
 	}
-
-/*Formats text in welcome sign in home.php */
-#welcome h1 {
+	
+/*Formats text in green sign in home.php */
+.welcome h1 {
 	width: 125px;
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 45px;
 	color: #21ba00; 
 	}
+
+/*Makes links in header turn gold when cursor is on top of them */
+a:hover{
+	color: gold;
+	}	
 
 /*Formats the delete link in home.php */
 #delete {
@@ -95,7 +95,7 @@ because some things weren't just working */
 /*Formats title in index.php */
 #title-index{
     width:225px;
-    margin-top: -280px;
+    margin-top: -380px;
 	}
 
 /*Formats title in sigin.php */
@@ -106,7 +106,7 @@ because some things weren't just working */
 
 /*Formats information-enter box in index.php */
 #create-index{
-	padding-top: 300px;
+	padding-top: 255px;
 	}
 
 /*Formats information-enter box in signin.php */
