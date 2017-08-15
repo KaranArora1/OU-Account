@@ -31,18 +31,18 @@
 		<form action="/createhandler.php" method= "POST"> 
 		
 			Username:<br>
-			<input type="text" name="username"><br><br>
+			<input type="text" name="username" size="25"><br><br>
 			
 			Password:<br>
-			<input type="password" name="password"><br>
+			<input type="password" name="password" size="25"><br>
 			<p class="charlimit"><i>
 			Password must be at least 4 characters</i></p>
 			
 			Confirm Password: 
-			<input type="password" name="confirm"><br><br>
+			<input type="password" name="confirm" size="25"><br><br>
 			
 			Email:
-			<br><input type="text" name="email"><br>
+			<br><input type="text" name="email" size="25"><br>
 			<p class="charlimit"><i>
 			A message will be sent to this email for 
 			authentication</i></p>
@@ -67,7 +67,7 @@
 		 	echo ' height:50px; width: 325px;';
 		 	echo ' border: 1px solid #fc4444;';
 		 	echo ' margin-left:auto; margin-right: auto;';
-		 	echo ' margin-top: -150px;">';
+		 	echo ' margin-top: -115px;">';
 		 	
 		 	echo '<p'; 
 		 	echo ' style="width: 290px; color: #cc2b22;';

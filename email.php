@@ -35,9 +35,11 @@
 			  $email=(strval($_SESSION["email"]));
 			  echo '<p style= "width: 240px;';
 			  echo 'margin-left: auto; margin-right: auto;';
-			  echo 'margin-top: 30px; color: #21ba00;">';
+			  echo 'margin-top: 20px; color: #21ba00;">';
 			  echo "An email has been sent to $email for 
-			   		authentication</p>";
+			   		authentication. The account will be
+			   		removed if it is not confirmed within
+			   		10 minutes.</p>";
 			   
 			  /*Unsets and destroys session so on refresh user is taken
 				to index.php*/

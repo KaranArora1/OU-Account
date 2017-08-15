@@ -95,7 +95,7 @@ because some things weren't just working */
 /*Formats title in index.php */
 #title-index{
     width:225px;
-    margin-top: -380px;
+    margin-top: -385px;
 	}
 
 /*Formats title in sigin.php */
@@ -106,7 +106,7 @@ because some things weren't just working */
 
 /*Formats information-enter box in index.php */
 #create-index{
-	padding-top: 255px;
+	padding-top: 225px;
 	}
 
 /*Formats information-enter box in signin.php */
