@@ -61,14 +61,18 @@
  
  /*Checks all of the elements in the Username and Email columns 
  of Account */
- $sql= "SELECT Username, Email FROM Account";
+ $sql= "SELECT Username, Email, String FROM Account";
  $result= mysqli_query($conn, $sql);
+ 
+//Array where used codes are sent
+$list= array();
  
  /*Checks if there are more than 0 rows. If this is true, it
  gets the username and email from each row and compares it 
  to the ones being entered. If they're the same, it takes you 
  back to index.php because there can't be two of the same 
- username or email. */
+ username or email. Also, it goes through all of the codes
+ in the database, appending them to $list.*/
  if (mysqli_num_rows($result) > 0){
  	while ($row=mysqli_fetch_assoc($result)){
  		if ($row["Username"]== $username){
@@ -82,13 +86,38 @@
  			//Sets error stating email is already taken
  			$_SESSION["error"]="Email is already in use";
  			header("Location: index.php");
- 			exit();
+ 			}
+ 		
+ 		$usedcode= $row["String"];
+ 		array_push($list, $usedcode);
+ 
  			}
  		}
- 	}
+ 
+//Random number is generated
+$code= rand(0, 10000000000000000);
+//Length of $list
+$len= count($list);
+$num=0;
+
+/*While $num is less than the length of $list, this will repeat.
+  If $code is equal to any string in $list, it is given another
+  random string, and num is reset to 0 so everything in $list is 
+  iterated through again. If $code does not equal the string given
+  to it, $num is increased by one. This is done to ensure no two 
+  codes are the same.*/
+while ($num <= $len){
+	if ($code== $list[$num]) {
+		$code= rand(0, 10000000000000000);
+		$num=0;
+		}
+	else {
+		$num++;
+		}
+	}
  
 //URL
-$url= "http://localhost:8080/linkhandler.php?username=$username";
+$url= "http://localhost:8080/linkhandler.php?code=$code";
  
  /*Sends an email to the address entered. If there is an error,
    it sets a session error*/
@@ -104,12 +133,16 @@ $url= "http://localhost:8080/linkhandler.php?username=$username";
  //Sets session email
  $_SESSION["email"]=strval($email);
  
+ //Sets date to be inserted
+ $date = date('Y-m-d H:i:s');
+ 
  /*Inserts $username into Username column and $password into 
- Password column of the table Account. Also puts in email and
- status (Using variables in this fashion might allow for SQL 
- injection?) */
- $sql= "INSERT INTO Account (Username, Password, Email, Status) 
- VALUES ('$username', '$password', '$email', 'Inactive')";
+ Password column of the table Account. Also puts in email,
+ status, and time (Using variables in this fashion might allow 
+ for SQL injection?) */
+ $sql= "INSERT INTO Account (
+ Username,Password,Email,Status, String, Time_made) 
+ VALUES ('$username','$password','$email','Inactive','$code','$date')";
  
  mysqli_query($conn, $sql);
 
