@@ -17,10 +17,24 @@
  a string */
  $username=(strval($_SESSION["username"]));
  
+ /*ORIGINAL CODE
  //Deletes user's account
  $sql="DELETE FROM Account WHERE Username='$username'";
- 
  mysqli_query($conn, $sql);
+ */
+ 
+ //Statements below prevent SQL injection
+ 
+ /*Initializes object, prepares statement, binds parameters into
+   prepared statement, executes statement and closes it */
+ $stmt= mysqli_stmt_init($conn);
+ 
+ mysqli_stmt_prepare($stmt, "DELETE FROM Account WHERE Username=?");
+ 
+ mysqli_stmt_bind_param($stmt, "s", $username);
+ 
+ mysqli_stmt_execute($stmt);
+ mysqli_stmt_close($stmt);
  
  //Unsets and destroys session
  session_unset();

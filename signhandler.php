@@ -49,10 +49,14 @@
    rows, it directs the user back to the signin.php. The code
    also checks to make sure the account is active.*/
  if (mysqli_num_rows($result)> 0) {
+    //I could have used bind_result for this, but I didn't see a point
+    
+    //SQL injection isn't possible with the way the code is formatted?
  	while ($row=mysqli_fetch_assoc($result)){
  		if (($row["Username"]==$username) and 
- 		($row["Password"]==$password)
- 		and ($row["Status"]=="Active")){
+ 		//Unhashes string in table and compares it to first parameter
+ 		(password_verify($password, $row["Password"])
+ 		and ($row["Status"]=="Active"))){
  			header("Location: home.php");
  			
  			//Sets session username
@@ -71,6 +75,9 @@
  		}
  	}
  else{
+ 	/*Sets session error stating there is an incorrect 
+ 	  username or password */
+ 	$_SESSION["error"]="Incorrect username or password";
  	//Takes you to signin.php if the first statement is false
  	header("Location: signin.php");
  	}

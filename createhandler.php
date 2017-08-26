@@ -3,8 +3,7 @@
 <?php
  //Starts session
  session_start();
- 
- 
+
  //If session username is set, it takes you to homepage
  if (isset($_SESSION["username"])){
  	header("Location: home.php");
@@ -49,7 +48,7 @@
  	header("Location: index.php");
  	exit();
  	}
- 
+
  /*Directs you back to index.php if the password and the 
  re-entered password do not match, stating an error that
  says to make sure they match */
@@ -82,10 +81,11 @@ $list= array();
  			exit();
  			}
  			
- 		elseif ($row["Email"]== $email){
+ 		elseif (password_verify($email, $row["Email"])){
  			//Sets error stating email is already taken
  			$_SESSION["error"]="Email is already in use";
  			header("Location: index.php");
+ 			exit();
  			}
  		
  		$usedcode= $row["String"];
@@ -133,18 +133,47 @@ $url= "http://localhost:8080/linkhandler.php?code=$code";
  //Sets session email
  $_SESSION["email"]=strval($email);
  
+ /*Hashing user password, email, and string using password_hash 
+   function. Salt is automatically generated using this function 
+   and the algorithm used is the strongest one PHP has (bcrypt
+   I believe). The cost is set to 13.*/
+ $option=array('cost' => 13);
+ $hashpass= password_hash($password, PASSWORD_DEFAULT, $option);
+ $hashmail= password_hash($email, PASSWORD_DEFAULT, $option);
+ $hashcode= password_hash($code, PASSWORD_DEFAULT, $option);
+
+ /*ORIGINAL CODE
+
  //Sets date to be inserted
  $date = date('Y-m-d H:i:s');
  
- /*Inserts $username into Username column and $password into 
- Password column of the table Account. Also puts in email,
- status, and time (Using variables in this fashion might allow 
- for SQL injection?) */
  $sql= "INSERT INTO Account (
  Username,Password,Email,Status, String, Time_made) 
- VALUES ('$username','$password','$email','Inactive','$code','$date')";
+ VALUES ('$username',
+ '$hashpass',
+ '$hashmail',
+ 'Inactive',
+ '$hashcode',
+ '$date')";
  
- mysqli_query($conn, $sql);
+ mysqli_query($conn, $sql);*/
+ 
+ //Statements below prevent SQL injection
+ //Variable that holds string inactive (bind_param only accepts vars)
+ $inactive="Inactive";
+ 
+ /*Initializes object, prepares statement, binds parameters into
+   prepared statement, executes statement and closes it */
+ $stmt= mysqli_stmt_init($conn);
+ 
+ mysqli_stmt_prepare($stmt, "INSERT INTO Account (Username, Password,
+ Email, Status, String) VALUES (?, ?, ?, ?, ?)");
+ 
+ mysqli_stmt_bind_param($stmt, "sssss", $username, $hashpass, 
+ $hashmail, $inactive, $hashcode);
+ 
+ mysqli_stmt_execute($stmt);
+ mysqli_stmt_close($stmt);
 
  //Closes mysql connection to database
  mysqli_close($conn);

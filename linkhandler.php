@@ -15,8 +15,9 @@
  	$result= mysqli_query($newconn, $newsql);
  	if (mysqli_num_rows($result) > 0){
  		while ($row=mysqli_fetch_assoc($result)){
- 			if (($row["String"]== $newcode) and 
- 				($row["Status"]=="Inactive")){
+ 			//Unhashes string in table and compares it to first param.
+ 			 if ((password_verify($newcode, $row["String"])
+ 			  	 and ($row["Status"]=="Inactive"))){
  					//Set session username
  					$_SESSION["username"]=$row["Username"];
  					return true;
@@ -59,12 +60,27 @@
  
  $username= $_SESSION["username"];
  
- //Updates account column to make user's account active
+/* ORIGINAL CODE
  $sql= "UPDATE Account
  		SET Status='Active'
  		WHERE Username= '$username';";
  
- mysqli_query($conn, $sql);
+ mysqli_query($conn, $sql);*/
+ 
+ /*Updates account column to make user's account active and prevents
+   SQL injection */
+   
+  /*Initializes object, prepares statement, binds parameters into
+   prepared statement, executes statement and closes it */
+ $stmt= mysqli_stmt_init($conn);
+ 
+ mysqli_stmt_prepare($stmt, "UPDATE Account SET Status='Active'
+ WHERE Username=?");
+ 
+ mysqli_stmt_bind_param($stmt, "s", $username);
+ 
+ mysqli_stmt_execute($stmt);
+ mysqli_stmt_close($stmt);
 
  //Takes you to home page
  header("Location: home.php");
