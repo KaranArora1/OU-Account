@@ -15,7 +15,7 @@
  	$result= mysqli_query($newconn, $newsql);
  	if (mysqli_num_rows($result) > 0){
  		while ($row=mysqli_fetch_assoc($result)){
- 			//Unhashes string in table and compares it to first param.
+ 			//Compares string in table to first parameter
  			 if ((password_verify($newcode, $row["String"])
  			  	 and ($row["Status"]=="Inactive"))){
  					//Set session username

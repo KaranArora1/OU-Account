@@ -105,9 +105,11 @@ $num=0;
   random string, and num is reset to 0 so everything in $list is 
   iterated through again. If $code does not equal the string given
   to it, $num is increased by one. This is done to ensure no two 
-  codes are the same.*/
+  codes are the same. If two codes were the same, on the off chance
+  that two accounts were inactive and had the same code, someone
+  could be directed to another person's account. */
 while ($num <= $len){
-	if ($code== $list[$num]) {
+	if (password_verify($code, $list[$num])) {
 		$code= rand(0, 10000000000000000);
 		$num=0;
 		}
@@ -124,7 +126,7 @@ $url= "http://localhost:8080/linkhandler.php?code=$code";
  if (!(mail("$email","Account Creation",
  			"Click the link to create your account! $url", 
  		
- 			"From: karanarora2001@gmail.com"))){
+ 			"From: Karan Arora"))){
  	  $_SESSION["error"]= "There was an error sending the email"; 
  	  header("Location: index.php");
  	  exit();
